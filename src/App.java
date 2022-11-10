@@ -1,5 +1,10 @@
 public class App {
+
+    public static GameFrame gameFrame;
+
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+
+        gameFrame = new GameFrame();
+
     }
 }
