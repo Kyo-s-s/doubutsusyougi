@@ -7,8 +7,10 @@ import static constants.Constants.*;
 
 public class GamePanel extends JPanel implements ActionListener {
     Timer timer;
+    Board board;
     public GamePanel() {
         // TODO:  MouseListener
+        board = new Board();
         timer = new Timer(50, this);
         timer.start();
     }
@@ -19,6 +21,7 @@ public class GamePanel extends JPanel implements ActionListener {
         g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         // TODO: draw Board
+        board.draw(g); 
     }
 
     public void actionPerformed(ActionEvent e) {
