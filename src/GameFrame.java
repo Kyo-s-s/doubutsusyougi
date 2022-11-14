@@ -14,6 +14,8 @@ public class GameFrame extends JFrame {
         this.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setResizable(false);
         this.setVisible(true);
+
+        this.addMouseListener(this.panel);
     }
 
 

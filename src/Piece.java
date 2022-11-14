@@ -12,8 +12,6 @@ public class Piece {
     }
 
     static ArrayList<Pair<Integer, Integer>> moveCell(EnumPiece piece) {
-        // isMine で反転するのいやなので、LION_ENEMY, LION_PLAYER みたいにするかも
-        // board[i][j].isEnemy() でチェックできればよいので、それだけ作る
         ArrayList<Pair<Integer, Integer>> moves = new ArrayList<Pair<Integer, Integer>>();
         switch (piece) {
             case EMPTY:
