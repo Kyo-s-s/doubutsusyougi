@@ -11,18 +11,18 @@ public class Board {
 
 
     public Board() {
-        board[0][0] = new Piece(EnumPiece.GIRAFFE, false);
-        board[0][1] = new Piece(EnumPiece.LION, false);
-        board[0][2] = new Piece(EnumPiece.ELEPHANT, false);
-        board[1][0] = new Piece(EnumPiece.EMPTY, false);
-        board[1][1] = new Piece(EnumPiece.CHICK, false);
-        board[1][2] = new Piece(EnumPiece.EMPTY, false);
-        board[2][0] = new Piece(EnumPiece.EMPTY, false);
-        board[2][1] = new Piece(EnumPiece.CHICK, true);
-        board[2][2] = new Piece(EnumPiece.EMPTY, false);
-        board[3][0] = new Piece(EnumPiece.ELEPHANT, true);
-        board[3][1] = new Piece(EnumPiece.LION, true);
-        board[3][2] = new Piece(EnumPiece.GIRAFFE, true);
+        board[0][0] = new Piece(EnumPiece.GIRAFFE_ENEMY);
+        board[0][1] = new Piece(EnumPiece.LION_ENEMY);
+        board[0][2] = new Piece(EnumPiece.ELEPHANT_ENEMY);
+        board[1][0] = new Piece(EnumPiece.EMPTY);
+        board[1][1] = new Piece(EnumPiece.CHICK_ENEMY);
+        board[1][2] = new Piece(EnumPiece.EMPTY);
+        board[2][0] = new Piece(EnumPiece.EMPTY);
+        board[2][1] = new Piece(EnumPiece.CHICK_PLAYER);
+        board[2][2] = new Piece(EnumPiece.EMPTY);
+        board[3][0] = new Piece(EnumPiece.ELEPHANT_PLAYER);
+        board[3][1] = new Piece(EnumPiece.LION_PLAYER);
+        board[3][2] = new Piece(EnumPiece.GIRAFFE_PLAYER);
     }
 
 
@@ -35,32 +35,9 @@ public class Board {
                 int x = (SCREEN_WIDTH - 3 * CELL_SIZE) / 2 + j * CELL_SIZE;
                 g.setColor(Color.black);
                 g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
-                if (board[i][j].isMine) {
-                    g.setColor(Color.red);
-                } else {
-                    g.setColor(Color.blue);
-                }
-                // TODO: imageの用意/差し替え
-                // Piece に draw(g, i, j) を作ってそこで描画するといいかも、こっちでは枠だけ
-                switch (board[i][j].type) {
-                    case EMPTY:
-                        break;
-                    case LION:
-                        g.drawString("LION", x + CELL_SIZE / 3, y + CELL_SIZE / 3);
-                        break;
-                    case ELEPHANT:
-                        g.drawString("ELEPHANT", x + CELL_SIZE / 3, y + CELL_SIZE / 3);
-                        break;
-                    case GIRAFFE:
-                        g.drawString("GIRAFFE", x + CELL_SIZE / 3, y + CELL_SIZE / 3);
-                        break;
-                    case CHICK:
-                        g.drawString("CHICK", x + CELL_SIZE / 3, y + CELL_SIZE / 3);
-                        break;
-                    case CHICKEN:
-                        g.drawString("CHICKEN", x + CELL_SIZE / 3, y + CELL_SIZE / 3);
-                        break;
-                }
+                
+                board[i][j].draw(g, i, j);
+                
             }
         }
     }

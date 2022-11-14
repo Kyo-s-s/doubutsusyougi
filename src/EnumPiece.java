@@ -1,8 +1,13 @@
 public enum EnumPiece {
     EMPTY,
-    LION,
-    ELEPHANT,
-    GIRAFFE,
-    CHICK,
-    CHICKEN,
+    LION_PLAYER,
+    LION_ENEMY,
+    ELEPHANT_PLAYER,
+    ELEPHANT_ENEMY,
+    GIRAFFE_PLAYER,
+    GIRAFFE_ENEMY,
+    CHICK_PLAYER,
+    CHICK_ENEMY,
+    CHICKEN_PLAYER,
+    CHICKEN_ENEMY,
 }
