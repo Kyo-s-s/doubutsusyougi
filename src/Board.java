@@ -31,32 +31,38 @@ public class Board {
 
     public void draw(Graphics g) {
         // TODO: HEIGHT, WIDTHのズレを直す
-        // TODO: 枠を書く処理がイケてないので修正
-        g.setColor(Color.black);
-        for (int i = 0; i < 4; i++) {
-            int y = (SCREEN_HEIGHT - 4 * CELL_SIZE) / 2 + i * CELL_SIZE;
-            for (int j = 0; j < 3; j++) {
-                int x = (SCREEN_WIDTH - 3 * CELL_SIZE) / 2 + j * CELL_SIZE;
-                g.setColor(Color.black);
-                if (select.getFirst() == i && select.getSecond() == j) {
-                    g.setColor(Color.green);
-                }
-                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
-                
-                board[i][j].draw(g, i, j);
-
+        
+        for (int h = 0; h < 4; h++) {
+            for (int w = 0; w < 3; w++) {
+                drawRect(g, h, w, Color.black);
+                board[h][w].draw(g, h, w);
             }
         }
+
+        if (select.getFirst() != -1 && select.getSecond() != -1) {
+            drawRect(g, select.getFirst(), select.getSecond(), Color.green);
+        }
+
+    }
+
+    void drawRect(Graphics g, int h, int w, Color color) {
+        int x = (SCREEN_WIDTH - 3 * CELL_SIZE) / 2 + w * CELL_SIZE;
+        int y = (SCREEN_HEIGHT - 4 * CELL_SIZE) / 2 + h * CELL_SIZE;
+        g.setColor(color);
+        g.drawRect(x, y, CELL_SIZE - 1, CELL_SIZE - 1);
     }
 
     public void click(int x, int y) {
+        System.out.println("x: " + x + " y: " + y);
         // 4 * 3 マスの中のどれかをクリックしたとき
         if (x >= (SCREEN_WIDTH - 3 * CELL_SIZE) / 2 && x <= (SCREEN_WIDTH + 3 * CELL_SIZE) / 2
                 && y >= (SCREEN_HEIGHT - 4 * CELL_SIZE) / 2 && y <= (SCREEN_HEIGHT + 4 * CELL_SIZE) / 2) {
             int h = (y - (SCREEN_HEIGHT - 4 * CELL_SIZE) / 2) / CELL_SIZE;
             int w = (x - (SCREEN_WIDTH - 3 * CELL_SIZE) / 2) / CELL_SIZE;
-            System.out.println("h: " + h + " w: " + w);
+            // System.out.println("h: " + h + " w: " + w);
             select = new Pair<Integer, Integer>(h, w);
         }
+
+        // TODO: 手駒のクリック
     }
 }

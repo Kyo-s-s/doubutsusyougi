@@ -28,7 +28,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-        board.click(e.getX(), e.getY());
+        // 上のタイトルバーの分で-30
+        board.click(e.getX(), e.getY() - 30);
     }
 
     public void mousePressed(MouseEvent e) {
