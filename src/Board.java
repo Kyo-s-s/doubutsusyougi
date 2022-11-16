@@ -30,8 +30,6 @@ public class Board {
 
 
     public void draw(Graphics g) {
-        // TODO: HEIGHT, WIDTHのズレを直す
-        
         for (int h = 0; h < 4; h++) {
             for (int w = 0; w < 3; w++) {
                 drawRect(g, h, w, Color.black);
@@ -40,7 +38,17 @@ public class Board {
         }
 
         if (select.getFirst() != -1 && select.getSecond() != -1) {
+
             drawRect(g, select.getFirst(), select.getSecond(), Color.green);
+
+            for (Pair<Integer, Integer> move : board[select.getFirst()][select.getSecond()].moveCell()) {
+                int h = select.getFirst() + move.getFirst();
+                int w = select.getSecond() + move.getSecond();
+                if (h >= 0 && h < 4 && w >= 0 && w < 3 && !board[h][w].isPlayer()) {
+                    drawRect(g, h, w, Color.yellow);
+                }
+            }
+
         }
 
     }
@@ -53,16 +61,20 @@ public class Board {
     }
 
     public void click(int x, int y) {
-        System.out.println("x: " + x + " y: " + y);
         // 4 * 3 マスの中のどれかをクリックしたとき
         if (x >= (SCREEN_WIDTH - 3 * CELL_SIZE) / 2 && x <= (SCREEN_WIDTH + 3 * CELL_SIZE) / 2
                 && y >= (SCREEN_HEIGHT - 4 * CELL_SIZE) / 2 && y <= (SCREEN_HEIGHT + 4 * CELL_SIZE) / 2) {
             int h = (y - (SCREEN_HEIGHT - 4 * CELL_SIZE) / 2) / CELL_SIZE;
             int w = (x - (SCREEN_WIDTH - 3 * CELL_SIZE) / 2) / CELL_SIZE;
-            // System.out.println("h: " + h + " w: " + w);
-            select = new Pair<Integer, Integer>(h, w);
+            System.out.println("h: " + h + " w: " + w);
+            if (board[h][w].isPlayer()) {
+                select.set(h, w);
+                return;
+            }
         }
 
         // TODO: 手駒のクリック
+
+        select.set(-1, -1);
     }
 }

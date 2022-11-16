@@ -22,5 +22,10 @@ public class Pair<T, U> {
     public void setSecond(U second) {
         this.second = second;
     }
+
+    public void set(T first, U second) {
+        this.first = first;
+        this.second = second;
+    }
     
 }

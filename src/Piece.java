@@ -11,12 +11,56 @@ public class Piece {
         this.type = type;
     }
 
-    static ArrayList<Pair<Integer, Integer>> moveCell(EnumPiece piece) {
+    // {h, w} 方向への加算
+    ArrayList<Pair<Integer, Integer>> moveCell() {
         ArrayList<Pair<Integer, Integer>> moves = new ArrayList<Pair<Integer, Integer>>();
-        switch (piece) {
+        switch (type) {
             case EMPTY:
                 break;
-            // TODO: ここに移動可能なセルを追加する
+            case LION_PLAYER, LION_ENEMY:
+                moves.add(new Pair<Integer, Integer>(1, 0));
+                moves.add(new Pair<Integer, Integer>(-1, 0));
+                moves.add(new Pair<Integer, Integer>(0, 1));
+                moves.add(new Pair<Integer, Integer>(0, -1));
+                moves.add(new Pair<Integer, Integer>(1, 1));
+                moves.add(new Pair<Integer, Integer>(1, -1));
+                moves.add(new Pair<Integer, Integer>(-1, 1));
+                moves.add(new Pair<Integer, Integer>(-1, -1));
+                break;
+            case ELEPHANT_PLAYER, ELEPHANT_ENEMY:
+                moves.add(new Pair<Integer, Integer>(1, 1));
+                moves.add(new Pair<Integer, Integer>(1, -1));
+                moves.add(new Pair<Integer, Integer>(-1, 1));
+                moves.add(new Pair<Integer, Integer>(-1, -1));
+                break;
+            case GIRAFFE_PLAYER, GIRAFFE_ENEMY:
+                moves.add(new Pair<Integer, Integer>(1, 0));
+                moves.add(new Pair<Integer, Integer>(-1, 0));
+                moves.add(new Pair<Integer, Integer>(0, 1));
+                moves.add(new Pair<Integer, Integer>(0, -1));
+                break;
+            case CHICK_PLAYER:
+                moves.add(new Pair<Integer, Integer>(-1, 0));
+                break;
+            case CHICK_ENEMY:
+                moves.add(new Pair<Integer, Integer>(1, 0));
+                break;
+            case CHICKEN_PLAYER:
+                moves.add(new Pair<Integer, Integer>(1, 0));
+                moves.add(new Pair<Integer, Integer>(1, 1));
+                moves.add(new Pair<Integer, Integer>(1, -1));
+                moves.add(new Pair<Integer, Integer>(0, 1));
+                moves.add(new Pair<Integer, Integer>(0, -1));
+                moves.add(new Pair<Integer, Integer>(-1, 0));
+                break;
+            case CHICKEN_ENEMY:
+                moves.add(new Pair<Integer, Integer>(-1, 0));
+                moves.add(new Pair<Integer, Integer>(-1, 1));
+                moves.add(new Pair<Integer, Integer>(-1, -1));
+                moves.add(new Pair<Integer, Integer>(0, 1));
+                moves.add(new Pair<Integer, Integer>(0, -1));
+                moves.add(new Pair<Integer, Integer>(1, 0));
+                break;
         }
         return moves;
     }
@@ -47,6 +91,6 @@ public class Piece {
         } else {
             g.setColor(Color.black);
         }
-        g.drawString(""+ type, x + 30, y + 30);
+        g.drawString("" + type, x + 30, y + 30);
     }
 }
