@@ -81,9 +81,9 @@ public class Piece {
         return false;
     }
 
-    public void draw(Graphics g, int h, int w) {
-        int x = (SCREEN_WIDTH - 3 * CELL_SIZE) / 2 + w * CELL_SIZE;
-        int y = (SCREEN_HEIGHT - 4 * CELL_SIZE) / 2 + h * CELL_SIZE;
+    public void drawBoard(Graphics g, int h, int w) {
+        int x = (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 + w * BOARD_CELL_SIZE;
+        int y = (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + h * BOARD_CELL_SIZE;
         if (isEnemy()) {
             g.setColor(Color.red);
         } else if (isPlayer()) {
@@ -92,5 +92,21 @@ public class Piece {
             g.setColor(Color.black);
         }
         g.drawString("" + type, x + 30, y + 30);
+    }
+
+    public void drawHand(Graphics g, int i, int count) {
+        int x, y;
+        if (!isPlayer()) {
+            g.setColor(Color.red);
+            x = (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 - BOARD_MARGIN - HAND_CELL_SIZE;
+            y = (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + i * (HAND_CELL_SIZE + HAND_MARGIN);
+        } else {
+            g.setColor(Color.blue);
+            x = (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 + 3 * BOARD_CELL_SIZE + BOARD_MARGIN;
+            y = (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + 4 * BOARD_CELL_SIZE - HAND_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN);
+        }
+        g.drawString("" + type, x + 30, y + 30);
+        g.drawRect(x, y, HAND_CELL_SIZE, HAND_CELL_SIZE);
+        // TOOD: 個数を表示するように
     }
 }

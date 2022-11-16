@@ -19,7 +19,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         g.setColor(Color.white);
         g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        // TODO: draw Board
         board.draw(g); 
     }
 
