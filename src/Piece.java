@@ -121,14 +121,14 @@ public class Piece {
         g.drawString("" + type, x + 30, y + 30);
     }
 
-    public void drawHand(Graphics g, int i, int count) {
+    public void drawHand(Graphics g, int i, int count, boolean isSelect) {
         int x, y;
         if (!isPlayer()) {
             g.setColor(Color.red);
             x = (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 - BOARD_MARGIN - HAND_CELL_SIZE;
             y = (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + i * (HAND_CELL_SIZE + HAND_MARGIN);
         } else {
-            g.setColor(Color.blue);
+            g.setColor(isSelect ? Color.green : Color.blue);
             x = (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 + 3 * BOARD_CELL_SIZE + BOARD_MARGIN;
             y = (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + 4 * BOARD_CELL_SIZE - HAND_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN);
         }

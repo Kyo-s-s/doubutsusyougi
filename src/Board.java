@@ -49,15 +49,27 @@ public class Board {
         for (int i = 0; i < playerHand.size(); i++) {
             Piece handPiece = playerHand.get(i).getFirst();
             int handCount = playerHand.get(i).getSecond();
-            handPiece.drawHand(g, i, handCount);
+            handPiece.drawHand(g, i, handCount, i == select.getChoiceHand());
         }
 
         for (int i = 0; i < enemyHand.size(); i++) {
             Piece handPiece = enemyHand.get(i).getFirst();
             int handCount = enemyHand.get(i).getSecond();
-            handPiece.drawHand(g, i, handCount);
+            handPiece.drawHand(g, i, handCount, false);
         }
 
+        if (select.isChoiceHand()) {
+            for (int h = 0; h < 4; h++) {
+                if (h == 0 && playerHand.get(select.getChoiceHand()).getFirst().type == EnumPiece.CHICK_PLAYER) {
+                    continue;
+                }
+                for (int w = 0; w < 3; w++) {
+                    if (board[h][w].type == EnumPiece.EMPTY) {
+                        drawRect(g, h, w, Color.yellow);
+                    }
+                }
+            }
+        }
     }
 
     void drawRect(Graphics g, int h, int w, Color color) {
@@ -88,14 +100,38 @@ public class Board {
                 }
             }
 
+            if (select.isChoiceHand()) {
+                Piece handPiece = playerHand.get(select.getChoiceHand()).getFirst();
+                if (board[h][w].type == EnumPiece.EMPTY && !(h == 0 && handPiece.type == EnumPiece.CHICK_PLAYER)) {
+                    board[h][w] = handPiece;
+                    if (playerHand.get(select.getChoiceHand()).getSecond() == 1) {
+                        playerHand.remove(select.getChoiceHand());
+                    } else {
+                        playerHand.get(select.getChoiceHand()).setSecond(playerHand.get(select.getChoiceHand()).getSecond() - 1);
+                    }
+                    select.reset();
+                    enemyTurn();
+                    return;
+                }
+            }
+
             if (board[h][w].isPlayer()) {
                 select.setChoicePos(new Pair<Integer, Integer>(h, w));
                 return;
             }
         }
 
-        // TODO: 手駒のクリック
-
+        if ((SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 + 3 * BOARD_CELL_SIZE + BOARD_MARGIN < x
+                && x < (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 + 3 * BOARD_CELL_SIZE + BOARD_MARGIN + HAND_CELL_SIZE) {
+            for (int i = 0; i < playerHand.size(); i++) {
+                if ((SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + 4 * BOARD_CELL_SIZE - HAND_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN) < y
+                        && y < (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + 4 * BOARD_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN)) {
+                    select.setChoiceHand(i);
+                    return;
+                }
+            }
+        }
+        
         select.reset();
     }
 

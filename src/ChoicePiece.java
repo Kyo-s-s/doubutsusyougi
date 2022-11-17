@@ -30,9 +30,11 @@ public class ChoicePiece {
 
     public void setChoicePos(Pair<Integer, Integer> choicePos) {
         this.choicePos = choicePos;
+        this.choiceIndex = -1;
     }
 
     public void setChoiceHand(int choiceIndex) {
+        this.choicePos.set(-1, -1);
         this.choiceIndex = choiceIndex;
     }
 
