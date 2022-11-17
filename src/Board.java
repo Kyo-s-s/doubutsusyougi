@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import static constants.Constants.*;
 public class Board {
     Piece[][] board = new Piece[4][3];
-    ArrayList<Piece> playerHand = new ArrayList<Piece>();
-    ArrayList<Piece> enemyHand = new ArrayList<Piece>();
+    ArrayList<Pair<Piece, Integer>> playerHand = new ArrayList<>();
+    ArrayList<Pair<Piece, Integer>> enemyHand = new ArrayList<>();
     ChoicePiece select = new ChoicePiece();
 
     public Board() {
@@ -45,14 +45,31 @@ public class Board {
             }
         }
 
+        // TODO: hand の sort
         for (int i = 0; i < playerHand.size(); i++) {
-            playerHand.get(i).drawHand(g, i, 1);
+            Piece handPiece = playerHand.get(i).getFirst();
+            int handCount = playerHand.get(i).getSecond();
+            handPiece.drawHand(g, i, handCount, i == select.getChoiceHand());
         }
 
         for (int i = 0; i < enemyHand.size(); i++) {
-            enemyHand.get(i).drawHand(g, i, 1);
+            Piece handPiece = enemyHand.get(i).getFirst();
+            int handCount = enemyHand.get(i).getSecond();
+            handPiece.drawHand(g, i, handCount, false);
         }
 
+        if (select.isChoiceHand()) {
+            for (int h = 0; h < 4; h++) {
+                if (h == 0 && playerHand.get(select.getChoiceHand()).getFirst().type == EnumPiece.CHICK_PLAYER) {
+                    continue;
+                }
+                for (int w = 0; w < 3; w++) {
+                    if (board[h][w].type == EnumPiece.EMPTY) {
+                        drawRect(g, h, w, Color.yellow);
+                    }
+                }
+            }
+        }
     }
 
     void drawRect(Graphics g, int h, int w, Color color) {
@@ -83,14 +100,38 @@ public class Board {
                 }
             }
 
+            if (select.isChoiceHand()) {
+                Piece handPiece = playerHand.get(select.getChoiceHand()).getFirst();
+                if (board[h][w].type == EnumPiece.EMPTY && !(h == 0 && handPiece.type == EnumPiece.CHICK_PLAYER)) {
+                    board[h][w] = handPiece;
+                    if (playerHand.get(select.getChoiceHand()).getSecond() == 1) {
+                        playerHand.remove(select.getChoiceHand());
+                    } else {
+                        playerHand.get(select.getChoiceHand()).setSecond(playerHand.get(select.getChoiceHand()).getSecond() - 1);
+                    }
+                    select.reset();
+                    enemyTurn();
+                    return;
+                }
+            }
+
             if (board[h][w].isPlayer()) {
                 select.setChoicePos(new Pair<Integer, Integer>(h, w));
                 return;
             }
         }
 
-        // TODO: 手駒のクリック
-
+        if ((SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 + 3 * BOARD_CELL_SIZE + BOARD_MARGIN < x
+                && x < (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2 + 3 * BOARD_CELL_SIZE + BOARD_MARGIN + HAND_CELL_SIZE) {
+            for (int i = 0; i < playerHand.size(); i++) {
+                if ((SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + 4 * BOARD_CELL_SIZE - HAND_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN) < y
+                        && y < (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 + 4 * BOARD_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN)) {
+                    select.setChoiceHand(i);
+                    return;
+                }
+            }
+        }
+        
         select.reset();
     }
 
@@ -101,13 +142,13 @@ public class Board {
                 System.out.println("You win!");
                 System.exit(0);
             }
-            playerHand.add(get.pickup());
+            handAdd(playerHand, get.pickup().type);
         } else if (board[h][w].isEnemy() && board[nextH][nextW].isPlayer()) {
             if (get.type == EnumPiece.LION_PLAYER) {
                 System.out.println("You lose...");
                 System.exit(0);
             }
-            enemyHand.add(get.pickup());
+            handAdd(enemyHand, get.pickup().type);
         }
         board[nextH][nextW] = board[h][w];
         if (board[nextH][nextW].type == EnumPiece.CHICK_PLAYER && nextH == 0) {
@@ -116,6 +157,16 @@ public class Board {
             board[nextH][nextW].type = EnumPiece.CHICKEN_ENEMY;
         }
         board[h][w] = new Piece(EnumPiece.EMPTY);
+    }
+
+    void handAdd(ArrayList<Pair<Piece, Integer>> hand, EnumPiece type) {
+        for (Pair<Piece, Integer> pair : hand) {
+            if (pair.getFirst().type == type) {
+                pair.setSecond(pair.getSecond() + 1);
+                return;
+            }
+        }
+        hand.add(new Pair<Piece, Integer>(new Piece(type), 1));
     }
 
     void enemyTurn() {
