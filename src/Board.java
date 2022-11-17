@@ -68,7 +68,21 @@ public class Board {
                 && y >= (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2 && y <= (SCREEN_HEIGHT + 4 * BOARD_CELL_SIZE) / 2) {
             int h = (y - (SCREEN_HEIGHT - 4 * BOARD_CELL_SIZE) / 2) / BOARD_CELL_SIZE;
             int w = (x - (SCREEN_WIDTH - 3 * BOARD_CELL_SIZE) / 2) / BOARD_CELL_SIZE;
-            System.out.println("h: " + h + " w: " + w);
+
+            if (select.isChoicePos()) {
+                Pair<Integer, Integer> pos = select.getChoicePos();
+                for (Pair<Integer, Integer> move : board[pos.getFirst()][pos.getSecond()].moveCell()) {
+                    int nextH = pos.getFirst() + move.getFirst();
+                    int nextW = pos.getSecond() + move.getSecond();
+                    if (nextH == h && nextW == w && !board[nextH][nextW].isPlayer()) {
+                        movePiece(pos.getFirst(), pos.getSecond(), nextH, nextW);
+                        select.reset();
+                        enemyTurn();
+                        return;
+                    }
+                }
+            }
+
             if (board[h][w].isPlayer()) {
                 select.setChoicePos(new Pair<Integer, Integer>(h, w));
                 return;
@@ -79,4 +93,47 @@ public class Board {
 
         select.reset();
     }
+
+    void movePiece(int h, int w, int nextH, int nextW) {
+        Piece get = board[nextH][nextW];
+        if (board[h][w].isPlayer() && board[nextH][nextW].isEnemy()) {
+            if (get.type == EnumPiece.LION_ENEMY) {
+                System.out.println("You win!");
+                System.exit(0);
+            }
+            playerHand.add(get.pickup());
+        } else if (board[h][w].isEnemy() && board[nextH][nextW].isPlayer()) {
+            if (get.type == EnumPiece.LION_PLAYER) {
+                System.out.println("You lose...");
+                System.exit(0);
+            }
+            enemyHand.add(get.pickup());
+        }
+        board[nextH][nextW] = board[h][w];
+        if (board[nextH][nextW].type == EnumPiece.CHICK_PLAYER && nextH == 0) {
+            board[nextH][nextW].type = EnumPiece.CHICKEN_PLAYER;
+        } else if (board[nextH][nextW].type == EnumPiece.CHICK_ENEMY && nextH == 3) {
+            board[nextH][nextW].type = EnumPiece.CHICKEN_ENEMY;
+        }
+        board[h][w] = new Piece(EnumPiece.EMPTY);
+    }
+
+    void enemyTurn() {
+        ArrayList<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> moveList = new ArrayList<>();
+        for (int h = 0; h < 4; h++) for (int w = 0; w < 3; w++) {
+            if (!board[h][w].isEnemy()) continue;
+            for (Pair<Integer, Integer> move : board[h][w].moveCell()) {
+                int nextH = h + move.getFirst();
+                int nextW = w + move.getSecond();
+                if (nextH >= 0 && nextH < 4 && nextW >= 0 && nextW < 3 && !board[nextH][nextW].isEnemy()) {
+                    moveList.add(new Pair<>(new Pair<>(h, w), new Pair<>(nextH, nextW)));
+                }
+            }
+        }
+        Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> move = moveList.get((int)(Math.random() * moveList.size()));
+        Pair<Integer, Integer> now = move.getFirst();
+        Pair<Integer, Integer> next = move.getSecond();
+        movePiece(now.getFirst(), now.getSecond(), next.getFirst(), next.getSecond());
+    }
+
 }

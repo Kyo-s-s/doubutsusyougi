@@ -46,20 +46,20 @@ public class Piece {
                 moves.add(new Pair<Integer, Integer>(1, 0));
                 break;
             case CHICKEN_PLAYER:
+                    moves.add(new Pair<Integer, Integer>(-1, 0));
+                    moves.add(new Pair<Integer, Integer>(-1, 1));
+                    moves.add(new Pair<Integer, Integer>(-1, -1));
+                    moves.add(new Pair<Integer, Integer>(0, 1));
+                    moves.add(new Pair<Integer, Integer>(0, -1));
+                    moves.add(new Pair<Integer, Integer>(1, 0));
+                    break;
+            case CHICKEN_ENEMY:
                 moves.add(new Pair<Integer, Integer>(1, 0));
                 moves.add(new Pair<Integer, Integer>(1, 1));
                 moves.add(new Pair<Integer, Integer>(1, -1));
                 moves.add(new Pair<Integer, Integer>(0, 1));
                 moves.add(new Pair<Integer, Integer>(0, -1));
                 moves.add(new Pair<Integer, Integer>(-1, 0));
-                break;
-            case CHICKEN_ENEMY:
-                moves.add(new Pair<Integer, Integer>(-1, 0));
-                moves.add(new Pair<Integer, Integer>(-1, 1));
-                moves.add(new Pair<Integer, Integer>(-1, -1));
-                moves.add(new Pair<Integer, Integer>(0, 1));
-                moves.add(new Pair<Integer, Integer>(0, -1));
-                moves.add(new Pair<Integer, Integer>(1, 0));
                 break;
         }
         return moves;
@@ -79,6 +79,33 @@ public class Piece {
             return true;
         }
         return false;
+    }
+
+    public Piece pickup() {
+        switch (type) {
+            case LION_PLAYER:
+                return new Piece(EnumPiece.LION_ENEMY);
+            case LION_ENEMY:
+                return new Piece(EnumPiece.LION_PLAYER);
+            case ELEPHANT_PLAYER:
+                return new Piece(EnumPiece.ELEPHANT_ENEMY);
+            case ELEPHANT_ENEMY:
+                return new Piece(EnumPiece.ELEPHANT_PLAYER);
+            case GIRAFFE_PLAYER:
+                return new Piece(EnumPiece.GIRAFFE_ENEMY);
+            case GIRAFFE_ENEMY:
+                return new Piece(EnumPiece.GIRAFFE_PLAYER);
+            case CHICK_PLAYER:
+                return new Piece(EnumPiece.CHICK_ENEMY);
+            case CHICK_ENEMY:
+                return new Piece(EnumPiece.CHICK_PLAYER);
+            case CHICKEN_PLAYER:
+                return new Piece(EnumPiece.CHICK_ENEMY);
+            case CHICKEN_ENEMY: 
+                return new Piece(EnumPiece.CHICK_PLAYER);
+            default:
+                return new Piece(EnumPiece.EMPTY);
+        }
     }
 
     public void drawBoard(Graphics g, int h, int w) {
