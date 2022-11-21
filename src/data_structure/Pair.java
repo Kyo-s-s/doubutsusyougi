@@ -1,6 +1,7 @@
+package data_structure;
 public class Pair<T, U> {
-    private T first;
-    private U second;
+    protected T first;
+    protected U second;
 
     public Pair(T first, U second) {
         this.first = first;
@@ -28,4 +29,12 @@ public class Pair<T, U> {
         this.second = second;
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Pair) {
+            Pair<?, ?> pair = (Pair<?, ?>) obj;
+            return first.equals(pair.first) && second.equals(pair.second);
+        }
+        return false;
+    }
 }

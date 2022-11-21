@@ -1,4 +1,5 @@
-public enum EnumPiece {
+package constants;
+public enum PieceEnum {
     EMPTY,
     LION_PLAYER,
     LION_ENEMY,
