@@ -238,4 +238,21 @@ public class Board {
         movePiece(now.getFirst(), now.getSecond(), next.getFirst(), next.getSecond());
     }
 
+    @Override
+    public Board clone() {
+        Board ret = new Board();
+        for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
+            for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
+                ret.board[h][w] = board[h][w];
+            }
+        }
+        for (Pair<PieceEnum, Integer> pair : playerHand) {
+            ret.handAdd(ret.playerHand, pair.getFirst());
+        }
+        for (Pair<PieceEnum, Integer> pair : enemyHand) {
+            ret.handAdd(ret.enemyHand, pair.getFirst());
+        }
+        return ret;
+    }
+
 }
