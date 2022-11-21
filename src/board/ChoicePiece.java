@@ -1,5 +1,9 @@
+package board;
+
+import data_structure.*;
+
 public class ChoicePiece {
-    Pair<Integer, Integer> choicePos = new Pair<Integer, Integer>(-1, -1);
+    Pos choicePos = new Pos(-1, -1);
     int choiceIndex;
 
     public ChoicePiece() {
@@ -10,8 +14,8 @@ public class ChoicePiece {
     public boolean isChoicePos() {
         return choicePos.getFirst() != -1 && choicePos.getSecond() != -1;
     }
-
-    public Pair<Integer, Integer> getChoicePos() {
+ 
+    public Pos getChoicePos() {
         return choicePos;
     }
 
@@ -28,7 +32,7 @@ public class ChoicePiece {
         choiceIndex = -1;
     }
 
-    public void setChoicePos(Pair<Integer, Integer> choicePos) {
+    public void setChoicePos(Pos choicePos) {
         this.choicePos = choicePos;
         this.choiceIndex = -1;
     }
