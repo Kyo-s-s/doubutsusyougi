@@ -31,6 +31,8 @@ public class Board {
     }
 
     public static void draw(Graphics g) {
+        g.setColor(Color.white);
+        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         ArrayList<Pos> movePos = new ArrayList<>();
         if (select.isChoicePos()) {
             int h = select.getChoicePos().getFirst();
@@ -86,11 +88,11 @@ public class Board {
         }
     }
 
-    public static void click(int x, int y) {
+    public static void click(int x, int y, Graphics g) {
         if (left <= x && x <= right && top <= y && y <= bottom) {
             int h = (y - top) / BOARD_CELL_SIZE;
             int w = (x - left) / BOARD_CELL_SIZE;
-            clickBoard(h, w);
+            clickBoard(h, w, g);
             return;
         }
 
@@ -108,7 +110,7 @@ public class Board {
         select.reset();
     }
 
-    public static void clickBoard(int h, int w) {
+    public static void clickBoard(int h, int w, Graphics g) {
         if (select.isChoicePos()) {
             Pos pos = select.getChoicePos();
             for (Pos move : getMoves(currentBoard.board[pos.getFirst()][pos.getSecond()])) {
@@ -117,7 +119,7 @@ public class Board {
                 if (h == nextH && w == nextW && currentBoard.canMovePiece(pos.getFirst(), pos.getSecond(), nextH, nextW)) {
                     currentBoard.movePiece(pos.getFirst(), pos.getSecond(), nextH, nextW);
                     select.reset();
-                    currentBoard.enemyTurn();
+                    currentBoard.enemyTurn(g);
                     return;
                 }
             }
@@ -128,7 +130,7 @@ public class Board {
             if (currentBoard.putCheck(handPiece, h, w)) {
                 currentBoard.putPiece(handPiece, h, w);
                 select.reset();
-                currentBoard.enemyTurn();
+                currentBoard.enemyTurn(g);
                 return;
             }
         }
@@ -212,7 +214,8 @@ public class Board {
         // sort
     }
 
-    void enemyTurn() {
+    void enemyTurn(Graphics g) {
+        draw(g);
         ArrayList<Pair<Pos, Pos>> moveList = new ArrayList<>();
         for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
             for (int w = 0; w < BOARD_CELL_WIDTH; w++) {

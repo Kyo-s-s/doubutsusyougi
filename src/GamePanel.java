@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     public void mouseClicked(MouseEvent e) {
         // 上のタイトルバーの分で-30
-        Board.click(e.getX(), e.getY() - 30);
+        Board.click(e.getX(), e.getY() - 30, this.getGraphics());
     }
 
     public void mousePressed(MouseEvent e) {
