@@ -134,7 +134,7 @@ public class PieceData {
 
     public static void drawCell(Graphics g, int x, int y, PieceEnum type, PieceState state, GamePanel observer) {
 
-        Image lion = new ImageIcon("lion.png").getImage();
+        Image lion = new ImageIcon("./src/images/lion.png").getImage();
 
         switch (state) {
             case NORMAL:
