@@ -1,8 +1,13 @@
 package constants;
 
 import java.awt.*;
+import java.awt.Image;
 
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+
+import main.GamePanel;
 import data_structure.*;
 import board.*;
 import static constants.Constants.*;
@@ -127,7 +132,10 @@ public class PieceData {
         }
     }
 
-    public static void drawCell(Graphics g, int x, int y, PieceEnum type, PieceState state) {
+    public static void drawCell(Graphics g, int x, int y, PieceEnum type, PieceState state, GamePanel observer) {
+
+        Image lion = new ImageIcon("lion.png").getImage();
+
         switch (state) {
             case NORMAL:
                 if (isPlayer(type)) {
@@ -146,6 +154,9 @@ public class PieceData {
                 break;
         }
         g.drawString("" + type, x + 30, y + 30);
+        if(type == PieceEnum.LION_PLAYER) {
+            g.drawImage(lion, x, y, observer);
+        }
         g.drawRect(x, y, BOARD_CELL_SIZE - 1, BOARD_CELL_SIZE - 1);
     }
 

@@ -1,3 +1,4 @@
+package main;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -21,7 +22,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         g.setColor(Color.white);
         g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        Board.draw(g); 
+        Board.draw(g, this); 
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -30,7 +31,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     public void mouseClicked(MouseEvent e) {
         // 上のタイトルバーの分で-30
-        Board.click(e.getX(), e.getY() - 30, this.getGraphics());
+        Board.click(e.getX(), e.getY() - 30, this.getGraphics(), this);
     }
 
     public void mousePressed(MouseEvent e) {
