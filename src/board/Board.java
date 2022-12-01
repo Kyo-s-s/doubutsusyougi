@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import main.GamePanel;
+import main.GameState;
 import constants.PieceData;
 import constants.PieceEnum;
 import data_structure.*;
@@ -28,7 +29,16 @@ public class Board {
     ArrayList<Pair<PieceEnum, Integer>> enemyHand = new ArrayList<>();
 
     public Board() {
-        board = BOARD;
+        for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
+            for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
+                board[h][w] = BOARD[h][w];
+            }
+        }
+    }
+
+    public static void init() {
+        currentBoard = new Board();
+        select = new ChoicePiece();
     }
 
     public static void draw(Graphics g, GamePanel observer) {
@@ -157,13 +167,13 @@ public class Board {
         if (isPlayer(board[h][w]) && isEnemy(get)) {
             if (isKing(get)) {
                 System.out.println("You win!");
-                System.exit(0);
+                GamePanel.gameState = GameState.RESULT_WIN;
             }
             handAdd(playerHand, pickup(get));
         } else if (isEnemy(board[h][w]) && isPlayer(get)) {
             if (isKing(get)) {
                 System.out.println("You lose...");
-                System.exit(0);
+                GamePanel.gameState = GameState.RESULT_LOSE;
             }
             handAdd(enemyHand, pickup(get));
         }
@@ -234,6 +244,9 @@ public class Board {
                     }
                 }
             }
+        }
+        if (moveList.size() == 0) {
+            return;
         }
         Pair<Pos, Pos> move = moveList.get((int) (Math.random() * moveList.size()));
         Pos now = move.getFirst();
