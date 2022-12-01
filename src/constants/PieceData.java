@@ -13,7 +13,8 @@ import board.*;
 import static constants.Constants.*;
 
 public class PieceData {
-    private PieceData() {}
+    private PieceData() {
+    }
 
     public static Image lionPlayer = new ImageIcon("./src/images/lion.png").getImage();
     public static Image lionEnemy = new ImageIcon("./src/images/lion-reverse.png").getImage();
@@ -25,7 +26,7 @@ public class PieceData {
     public static Image chickinEnemy = new ImageIcon("./src/images/chicken-reverse.png").getImage();
     public static Image chickPlayer = new ImageIcon("./src/images/chick.png").getImage();
     public static Image chickEnemy = new ImageIcon("./src/images/chick-reverse.png").getImage();
-    
+
     public static Image flameGreen = new ImageIcon("./src/images/flame-green.png").getImage();
     public static Image flameYellow = new ImageIcon("./src/images/flame-yellow.png").getImage();
 
@@ -153,10 +154,10 @@ public class PieceData {
         }
 
         switch (type) {
-            case LION_PLAYER:   
+            case LION_PLAYER:
                 g.drawImage(lionPlayer, x, y, BOARD_CELL_SIZE, BOARD_CELL_SIZE, observer);
                 break;
-            case LION_ENEMY:   
+            case LION_ENEMY:
                 g.drawImage(lionEnemy, x, y, BOARD_CELL_SIZE, BOARD_CELL_SIZE, observer);
                 break;
             case ELEPHANT_PLAYER:
@@ -202,10 +203,10 @@ public class PieceData {
     public static void drawHand(Graphics g, int x, int y, PieceEnum type, boolean isSelect, GamePanel observer) {
         // TODO: 個数を表示する
         switch (type) {
-            case LION_PLAYER:   
+            case LION_PLAYER:
                 g.drawImage(lionPlayer, x, y, HAND_CELL_SIZE, HAND_CELL_SIZE, observer);
                 break;
-            case LION_ENEMY:   
+            case LION_ENEMY:
                 g.drawImage(lionEnemy, x, y, HAND_CELL_SIZE, HAND_CELL_SIZE, observer);
                 break;
             case ELEPHANT_PLAYER:

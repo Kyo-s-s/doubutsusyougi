@@ -1,4 +1,5 @@
 package main;
+
 public class App {
 
     public static GameFrame gameFrame;

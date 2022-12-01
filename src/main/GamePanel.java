@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -11,6 +12,7 @@ import static constants.Constants.*;
 public class GamePanel extends JPanel implements ActionListener, MouseListener {
     Timer timer;
     Board board;
+
     public GamePanel() {
         // board = new Board_before();
         timer = new Timer(50, this);
@@ -22,7 +24,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         g.setColor(Color.white);
         g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        Board.draw(g, this); 
+        Board.draw(g, this);
     }
 
     public void actionPerformed(ActionEvent e) {

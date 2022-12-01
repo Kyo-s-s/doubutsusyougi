@@ -14,7 +14,7 @@ public class ChoicePiece {
     public boolean isChoicePos() {
         return choicePos.getFirst() != -1 && choicePos.getSecond() != -1;
     }
- 
+
     public Pos getChoicePos() {
         return choicePos;
     }

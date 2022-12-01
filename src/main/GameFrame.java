@@ -1,4 +1,5 @@
 package main;
+
 import javax.swing.JFrame;
 
 import static constants.Constants.*;
@@ -18,6 +19,5 @@ public class GameFrame extends JFrame {
 
         this.addMouseListener(this.panel);
     }
-
 
 }

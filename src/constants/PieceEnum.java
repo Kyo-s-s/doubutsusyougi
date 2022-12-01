@@ -1,4 +1,5 @@
 package constants;
+
 public enum PieceEnum {
     EMPTY,
     LION_PLAYER,

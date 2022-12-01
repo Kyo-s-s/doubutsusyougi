@@ -1,4 +1,5 @@
 package board;
+
 import java.awt.*;
 
 import java.util.ArrayList;
@@ -14,15 +15,13 @@ import static constants.PieceData.*;
 public class Board {
     static Board currentBoard = new Board();
     static ChoicePiece select = new ChoicePiece();
-    
+
     static final int left = (SCREEN_WIDTH - BOARD_CELL_WIDTH * BOARD_CELL_SIZE) / 2;
     static final int right = left + BOARD_CELL_WIDTH * BOARD_CELL_SIZE;
     static final int top = (SCREEN_HEIGHT - BOARD_CELL_HEIGHT * BOARD_CELL_SIZE) / 2;
     static final int bottom = top + BOARD_CELL_HEIGHT * BOARD_CELL_SIZE;
     static final int handLeft = right + BOARD_MARGIN;
-    static final int handRight = handLeft + HAND_CELL_SIZE;    
-
-
+    static final int handRight = handLeft + HAND_CELL_SIZE;
 
     PieceEnum[][] board = new PieceEnum[BOARD_CELL_HEIGHT][BOARD_CELL_WIDTH];
     ArrayList<Pair<PieceEnum, Integer>> playerHand = new ArrayList<>();
@@ -118,14 +117,15 @@ public class Board {
             for (Pos move : getMoves(currentBoard.board[pos.getFirst()][pos.getSecond()])) {
                 int nextH = pos.getFirst() + move.getFirst();
                 int nextW = pos.getSecond() + move.getSecond();
-                if (h == nextH && w == nextW && currentBoard.canMovePiece(pos.getFirst(), pos.getSecond(), nextH, nextW)) {
+                if (h == nextH && w == nextW
+                        && currentBoard.canMovePiece(pos.getFirst(), pos.getSecond(), nextH, nextW)) {
                     currentBoard.movePiece(pos.getFirst(), pos.getSecond(), nextH, nextW);
                     select.reset();
                     currentBoard.enemyTurn(g, observer);
                     return;
                 }
             }
-        } 
+        }
 
         if (select.isChoiceHand()) {
             PieceEnum handPiece = currentBoard.playerHand.get(select.getChoiceHand()).getFirst();
@@ -149,7 +149,7 @@ public class Board {
 
     boolean canMovePiece(int h, int w, int nextH, int nextW) {
         return (isPlayer(board[h][w]) && !isPlayer(board[nextH][nextW]))
-            || (isEnemy(board[h][w]) && !isEnemy(board[nextH][nextW]));
+                || (isEnemy(board[h][w]) && !isEnemy(board[nextH][nextW]));
     }
 
     void movePiece(int h, int w, int nextH, int nextW) {
@@ -221,7 +221,8 @@ public class Board {
         ArrayList<Pair<Pos, Pos>> moveList = new ArrayList<>();
         for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
             for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
-                if (!isEnemy(board[h][w])) continue;
+                if (!isEnemy(board[h][w]))
+                    continue;
                 for (Pos pos : getMoves(board[h][w])) {
                     int nextH = h + pos.getFirst();
                     int nextW = w + pos.getSecond();
