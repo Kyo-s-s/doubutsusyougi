@@ -15,7 +15,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     public static GameState gameState;
 
     public GamePanel() {
-        // board = new Board_before();
         gameState = GameState.START;
         timer = new Timer(50, this);
         timer.start();
