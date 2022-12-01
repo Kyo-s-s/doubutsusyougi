@@ -1,4 +1,5 @@
 package data_structure;
+
 public class Pair<T, U> {
     protected T first;
     protected U second;
@@ -28,7 +29,7 @@ public class Pair<T, U> {
         this.first = first;
         this.second = second;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Pair) {

@@ -1,8 +1,12 @@
 package board;
+
 import java.awt.*;
 
 import java.util.ArrayList;
 
+import main.GamePanel;
+import main.GameState;
+import constants.PieceData;
 import constants.PieceEnum;
 import data_structure.*;
 
@@ -12,25 +16,32 @@ import static constants.PieceData.*;
 public class Board {
     static Board currentBoard = new Board();
     static ChoicePiece select = new ChoicePiece();
-    
+
     static final int left = (SCREEN_WIDTH - BOARD_CELL_WIDTH * BOARD_CELL_SIZE) / 2;
     static final int right = left + BOARD_CELL_WIDTH * BOARD_CELL_SIZE;
     static final int top = (SCREEN_HEIGHT - BOARD_CELL_HEIGHT * BOARD_CELL_SIZE) / 2;
     static final int bottom = top + BOARD_CELL_HEIGHT * BOARD_CELL_SIZE;
     static final int handLeft = right + BOARD_MARGIN;
-    static final int handRight = handLeft + HAND_CELL_SIZE;    
-
-
+    static final int handRight = handLeft + HAND_CELL_SIZE;
 
     PieceEnum[][] board = new PieceEnum[BOARD_CELL_HEIGHT][BOARD_CELL_WIDTH];
     ArrayList<Pair<PieceEnum, Integer>> playerHand = new ArrayList<>();
     ArrayList<Pair<PieceEnum, Integer>> enemyHand = new ArrayList<>();
 
     public Board() {
-        board = BOARD;
+        for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
+            for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
+                board[h][w] = BOARD[h][w];
+            }
+        }
     }
 
-    public static void draw(Graphics g) {
+    public static void init() {
+        currentBoard = new Board();
+        select = new ChoicePiece();
+    }
+
+    public static void draw(Graphics g, GamePanel observer) {
         g.setColor(Color.white);
         g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         ArrayList<Pos> movePos = new ArrayList<>();
@@ -67,7 +78,7 @@ public class Board {
                 if (movePos.contains(new Pos(h, w))) {
                     state = PieceState.CANMOVE;
                 }
-                drawCell(g, x, y, currentBoard.board[h][w], state);
+                drawCell(g, x, y, currentBoard.board[h][w], state, observer);
             }
         }
 
@@ -76,7 +87,7 @@ public class Board {
             int handCount = currentBoard.enemyHand.get(i).getSecond();
             int x = left - HAND_CELL_SIZE - BOARD_MARGIN;
             int y = top + i * (HAND_CELL_SIZE + HAND_MARGIN);
-            drawHand(g, x, y, handPiece, false);
+            drawHand(g, x, y, handPiece, false, observer);
         }
 
         for (int i = 0; i < currentBoard.playerHand.size(); i++) {
@@ -84,15 +95,15 @@ public class Board {
             int handCount = currentBoard.playerHand.get(i).getSecond();
             int x = right + BOARD_MARGIN;
             int y = bottom - HAND_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN);
-            drawHand(g, x, y, handPiece, select.getChoiceHand() == i);
+            drawHand(g, x, y, handPiece, select.getChoiceHand() == i, observer);
         }
     }
 
-    public static void click(int x, int y, Graphics g) {
+    public static void click(int x, int y, Graphics g, GamePanel observer) {
         if (left <= x && x <= right && top <= y && y <= bottom) {
             int h = (y - top) / BOARD_CELL_SIZE;
             int w = (x - left) / BOARD_CELL_SIZE;
-            clickBoard(h, w, g);
+            clickBoard(h, w, g, observer);
             return;
         }
 
@@ -110,27 +121,28 @@ public class Board {
         select.reset();
     }
 
-    public static void clickBoard(int h, int w, Graphics g) {
+    public static void clickBoard(int h, int w, Graphics g, GamePanel observer) {
         if (select.isChoicePos()) {
             Pos pos = select.getChoicePos();
             for (Pos move : getMoves(currentBoard.board[pos.getFirst()][pos.getSecond()])) {
                 int nextH = pos.getFirst() + move.getFirst();
                 int nextW = pos.getSecond() + move.getSecond();
-                if (h == nextH && w == nextW && currentBoard.canMovePiece(pos.getFirst(), pos.getSecond(), nextH, nextW)) {
+                if (h == nextH && w == nextW
+                        && currentBoard.canMovePiece(pos.getFirst(), pos.getSecond(), nextH, nextW)) {
                     currentBoard.movePiece(pos.getFirst(), pos.getSecond(), nextH, nextW);
                     select.reset();
-                    currentBoard.enemyTurn(g);
+                    currentBoard.enemyTurn(g, observer);
                     return;
                 }
             }
-        } 
+        }
 
         if (select.isChoiceHand()) {
             PieceEnum handPiece = currentBoard.playerHand.get(select.getChoiceHand()).getFirst();
             if (currentBoard.putCheck(handPiece, h, w)) {
                 currentBoard.putPiece(handPiece, h, w);
                 select.reset();
-                currentBoard.enemyTurn(g);
+                currentBoard.enemyTurn(g, observer);
                 return;
             }
         }
@@ -147,7 +159,7 @@ public class Board {
 
     boolean canMovePiece(int h, int w, int nextH, int nextW) {
         return (isPlayer(board[h][w]) && !isPlayer(board[nextH][nextW]))
-            || (isEnemy(board[h][w]) && !isEnemy(board[nextH][nextW]));
+                || (isEnemy(board[h][w]) && !isEnemy(board[nextH][nextW]));
     }
 
     void movePiece(int h, int w, int nextH, int nextW) {
@@ -155,13 +167,13 @@ public class Board {
         if (isPlayer(board[h][w]) && isEnemy(get)) {
             if (isKing(get)) {
                 System.out.println("You win!");
-                System.exit(0);
+                GamePanel.gameState = GameState.RESULT_WIN;
             }
             handAdd(playerHand, pickup(get));
         } else if (isEnemy(board[h][w]) && isPlayer(get)) {
             if (isKing(get)) {
                 System.out.println("You lose...");
-                System.exit(0);
+                GamePanel.gameState = GameState.RESULT_LOSE;
             }
             handAdd(enemyHand, pickup(get));
         }
@@ -214,12 +226,13 @@ public class Board {
         // sort
     }
 
-    void enemyTurn(Graphics g) {
-        draw(g);
+    void enemyTurn(Graphics g, GamePanel observer) {
+        draw(g, observer);
         ArrayList<Pair<Pos, Pos>> moveList = new ArrayList<>();
         for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
             for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
-                if (!isEnemy(board[h][w])) continue;
+                if (!isEnemy(board[h][w]))
+                    continue;
                 for (Pos pos : getMoves(board[h][w])) {
                     int nextH = h + pos.getFirst();
                     int nextW = w + pos.getSecond();
@@ -231,6 +244,9 @@ public class Board {
                     }
                 }
             }
+        }
+        if (moveList.size() == 0) {
+            return;
         }
         Pair<Pos, Pos> move = moveList.get((int) (Math.random() * moveList.size()));
         Pos now = move.getFirst();
