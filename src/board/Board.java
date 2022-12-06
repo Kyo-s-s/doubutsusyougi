@@ -136,6 +136,7 @@ public class Board implements Cloneable {
                     if (currentBoard.isWin(true)) {
                         System.out.println("You Win!");
                         GamePanel.gameState = GameState.RESULT_WIN;
+                        return;
                     }
                     currentBoard.enemyTurn(g, observer);
                     if (currentBoard.isWin(false)) {
@@ -302,6 +303,11 @@ public class Board implements Cloneable {
     }
 
     public int score() {
+        if (isWin(false)) {
+            return 1000000;
+        } else if (isWin(true)) {
+            return -1000000;
+        }
         int score = 0;
         for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
             for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
