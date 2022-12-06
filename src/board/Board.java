@@ -5,6 +5,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.security.auth.kerberos.KerberosCredMessage;
+
 import main.GamePanel;
 import main.GameState;
 import constants.PieceEnum;
@@ -131,7 +133,15 @@ public class Board implements Cloneable {
                         && currentBoard.canMovePiece(pos.getFirst(), pos.getSecond(), nextH, nextW)) {
                     currentBoard.movePiece(pos.getFirst(), pos.getSecond(), nextH, nextW);
                     select.reset();
+                    if (currentBoard.isWin(true)) {
+                        System.out.println("You Win!");
+                        GamePanel.gameState = GameState.RESULT_WIN;
+                    }
                     currentBoard.enemyTurn(g, observer);
+                    if (currentBoard.isWin(false)) {
+                        System.out.println("You Lose...");
+                        GamePanel.gameState = GameState.RESULT_LOSE;
+                    }
                     return;
                 }
             }
@@ -165,16 +175,8 @@ public class Board implements Cloneable {
     void movePiece(int h, int w, int nextH, int nextW) {
         PieceEnum get = board[nextH][nextW];
         if (isPlayer(board[h][w]) && isEnemy(get)) {
-            if (isKing(get)) {
-                System.out.println("You win!");
-                GamePanel.gameState = GameState.RESULT_WIN;
-            }
             handAdd(playerHand, pickup(get));
         } else if (isEnemy(board[h][w]) && isPlayer(get)) {
-            if (isKing(get)) {
-                System.out.println("You lose...");
-                GamePanel.gameState = GameState.RESULT_LOSE;
-            }
             handAdd(enemyHand, pickup(get));
         }
         board[nextH][nextW] = board[h][w];
@@ -297,6 +299,51 @@ public class Board implements Cloneable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public int score() {
+        int score = 0;
+        for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
+            for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
+                if (isPlayer(board[h][w])) {
+                    for (Pos move : getMoves(board[h][w])) {
+                        int nextH = h + move.getFirst();
+                        int nextW = w + move.getSecond();
+                        if (!new Pos(nextH, nextW).checkInBoard()) {
+                            continue;
+                        }
+                        if (isEnemy(board[nextH][nextW]) && isKing(board[nextH][nextW])) {
+                            score -= 10000;
+                        }
+                    }
+                } else if (isEnemy(board[h][w])) {
+                    for (Pos move : getMoves(board[h][w])) {
+                        int nextH = h + move.getFirst();
+                        int nextW = w + move.getSecond();
+                        if (!new Pos(nextH, nextW).checkInBoard()) {
+                            continue;
+                        }
+                        if (isPlayer(board[nextH][nextW]) && isKing(board[nextH][nextW])) {
+                            score += 1000;
+                        }
+                    }
+                }
+            }
+        }
+        return score;
+    }
+
+    boolean isWin(boolean isPlayer) {
+        boolean fin = true;
+        for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
+            for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
+                if ((isPlayer && isEnemy(board[h][w]) && isKing(board[h][w]))
+                        || (!isPlayer && isPlayer(board[h][w]) && isKing(board[h][w]))) {
+                    return false;
+                }
+            }
+        }
+        return fin;
     }
 
 }
