@@ -3,17 +3,17 @@ package board;
 import java.awt.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import main.GamePanel;
 import main.GameState;
-import constants.PieceData;
 import constants.PieceEnum;
 import data_structure.*;
 
 import static constants.Constants.*;
 import static constants.PieceData.*;
 
-public class Board {
+public class Board implements Cloneable {
     static Board currentBoard = new Board();
     static ChoicePiece select = new ChoicePiece();
 
@@ -228,11 +228,22 @@ public class Board {
 
     void enemyTurn(Graphics g, GamePanel observer) {
         draw(g, observer);
-        ArrayList<Pair<Pos, Pos>> moveList = new ArrayList<>();
+
+        Solver solver = new Solver(this);
+        Optional<Board> nextBoard = solver.solve();
+        nextBoard.ifPresent(next -> {
+            currentBoard = next;
+        });
+    }
+
+    ArrayList<Board> getNeighborhood(boolean isPlayerTurn) {
+        ArrayList<Board> neighborhood = new ArrayList<>();
+
         for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
             for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
-                if (!isEnemy(board[h][w]))
+                if ((isPlayerTurn && !isPlayer(board[h][w])) || (!isPlayerTurn && !isEnemy(board[h][w]))) {
                     continue;
+                }
                 for (Pos pos : getMoves(board[h][w])) {
                     int nextH = h + pos.getFirst();
                     int nextW = w + pos.getSecond();
@@ -240,18 +251,52 @@ public class Board {
                         continue;
                     }
                     if (canMovePiece(h, w, nextH, nextW)) {
-                        moveList.add(new Pair<Pos, Pos>(new Pos(h, w), new Pos(nextH, nextW)));
+                        Board clone = this.clone();
+                        clone.movePiece(h, w, nextH, nextW);
+                        neighborhood.add(clone);
                     }
                 }
             }
         }
-        if (moveList.size() == 0) {
-            return;
+
+        for (int i = 0; i < (isPlayerTurn ? playerHand : enemyHand).size(); i++) {
+            PieceEnum type = (isPlayerTurn ? playerHand : enemyHand).get(i).getFirst();
+            for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
+                for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
+                    if (putCheck(type, h, w)) {
+                        Board clone = this.clone();
+                        clone.putPiece(type, h, w);
+                        neighborhood.add(clone);
+                    }
+                }
+            }
         }
-        Pair<Pos, Pos> move = moveList.get((int) (Math.random() * moveList.size()));
-        Pos now = move.getFirst();
-        Pos next = move.getSecond();
-        movePiece(now.getFirst(), now.getSecond(), next.getFirst(), next.getSecond());
+
+        return neighborhood;
+    }
+
+    public Board clone() {
+        try {
+            Board clone = (Board) super.clone();
+            clone.board = new PieceEnum[BOARD_CELL_HEIGHT][BOARD_CELL_WIDTH];
+            for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
+                for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
+                    clone.board[h][w] = board[h][w];
+                }
+            }
+            clone.playerHand = new ArrayList<>();
+            for (Pair<PieceEnum, Integer> pair : playerHand) {
+                clone.playerHand.add(new Pair<PieceEnum, Integer>(pair.getFirst(), pair.getSecond()));
+            }
+            clone.enemyHand = new ArrayList<>();
+            for (Pair<PieceEnum, Integer> pair : enemyHand) {
+                clone.enemyHand.add(new Pair<PieceEnum, Integer>(pair.getFirst(), pair.getSecond()));
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
