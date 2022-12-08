@@ -1,4 +1,4 @@
-package main;
+import main.GameFrame;
 
 public class App {
 
