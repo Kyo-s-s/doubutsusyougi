@@ -321,6 +321,10 @@ public class Board implements Cloneable {
                         if (isEnemy(board[nextH][nextW]) && isKing(board[nextH][nextW])) {
                             score -= 10000;
                         }
+                        if (isKing(board[h][w])
+                                && (h == 0 || w == 0 || h == BOARD_CELL_HEIGHT - 1 || w == BOARD_CELL_WIDTH - 1)) {
+                            score += 500;
+                        }
                     }
                 } else if (isEnemy(board[h][w])) {
                     for (Pos move : getMoves(board[h][w])) {
@@ -331,6 +335,10 @@ public class Board implements Cloneable {
                         }
                         if (isPlayer(board[nextH][nextW]) && isKing(board[nextH][nextW])) {
                             score += 1000;
+                        }
+                        if (isKing(board[h][w])
+                                && (h == 0 || w == 0 || h == BOARD_CELL_HEIGHT - 1 || w == BOARD_CELL_WIDTH - 1)) {
+                            score -= 500;
                         }
                     }
                 }
