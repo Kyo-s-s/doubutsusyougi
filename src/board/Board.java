@@ -2,6 +2,8 @@ package board;
 
 import java.awt.*;
 
+import javax.swing.*;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -26,6 +28,10 @@ public class Board implements Cloneable {
     static final int handLeft = right + BOARD_MARGIN;
     static final int handRight = handLeft + HAND_CELL_SIZE;
 
+    static Image playImageEasy = new ImageIcon("./src/images/backeasy.png").getImage();
+    static Image playImageNormal = new ImageIcon("./src/images/backnormal.png").getImage();
+    static Image playImageHard = new ImageIcon("./src/images/backhard.png").getImage();
+
     PieceEnum[][] board = new PieceEnum[BOARD_CELL_HEIGHT][BOARD_CELL_WIDTH];
     ArrayList<Pair<PieceEnum, Integer>> playerHand = new ArrayList<>();
     ArrayList<Pair<PieceEnum, Integer>> enemyHand = new ArrayList<>();
@@ -44,6 +50,17 @@ public class Board implements Cloneable {
     }
 
     public static void draw(Graphics g, GamePanel observer) {
+        switch (GamePanel.gameMode) {
+            case EASY:
+                g.drawImage(playImageEasy, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, observer);
+                break;
+            case NORMAL:
+                g.drawImage(playImageNormal, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, observer);
+                break;
+            case HARD:
+                g.drawImage(playImageHard, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, observer);
+                break;
+        }
         ArrayList<Pos> movePos = new ArrayList<>();
         if (select.isChoicePos()) {
             int h = select.getChoicePos().getFirst();
