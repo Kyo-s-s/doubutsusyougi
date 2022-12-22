@@ -13,9 +13,17 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     Timer timer;
     Board board;
     public static GameState gameState;
+    public static GameMode gameMode;
+    static Image titleImage = new ImageIcon("./src/images/titlepage.png").getImage();
+    static Image resultImageWin = new ImageIcon("./src/images/result-win.png").getImage();
+    static Image resultImageLose = new ImageIcon("./src/images/result-lose.png").getImage();
+    static Image playImageEasy = new ImageIcon("./src/images/backeasy.png").getImage();
+    static Image playImageNormal = new ImageIcon("./src/images/backnormal.png").getImage();
+    static Image playImageHard = new ImageIcon("./src/images/backhard.png").getImage();
 
     public GamePanel() {
         gameState = GameState.START;
+        gameMode = GameMode.EASY;
         timer = new Timer(50, this);
         timer.start();
     }
@@ -27,22 +35,23 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
         switch (gameState) {
             case START:
-                g.setColor(Color.black);
-                g.setFont(new Font("Arial", Font.BOLD, 50));
-                g.drawString("Start", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2);
+                g.drawImage(titleImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 break;
             case PLAY:
+                if (gameMode == GameMode.EASY) {
+                    g.drawImage(playImageEasy, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
+                } else if (gameMode == GameMode.NORMAL) {
+                    g.drawImage(playImageNormal, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
+                } else if (gameMode == GameMode.HARD) {
+                    g.drawImage(playImageHard, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
+                }
                 Board.draw(g, this);
                 break;
             case RESULT_WIN:
-                g.setColor(Color.black);
-                g.setFont(new Font("Arial", Font.BOLD, 50));
-                g.drawString("You Win!", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2);
+                g.drawImage(resultImageWin, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 break;
             case RESULT_LOSE:
-                g.setColor(Color.black);
-                g.setFont(new Font("Arial", Font.BOLD, 50));
-                g.drawString("You Lose!", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2);
+                g.drawImage(resultImageLose, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 break;
         }
 
@@ -52,12 +61,30 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         repaint();
     }
 
+    boolean isCircleClicked(int x, int y, int cx, int cy, int r) {
+        return (x - cx) * (x - cx) + (y - cy) * (y - cy) < r * r;
+    }
+
     public void mouseClicked(MouseEvent e) {
         // 上のタイトルバーの分で-30
         switch (gameState) {
             case START:
-                gameState = GameState.PLAY;
-                Board.init();
+                // 当たり判定
+                boolean isEasyClicked = isCircleClicked(e.getX(), e.getY() - 30, EASY_X, EASY_Y, RADIUS);
+                boolean isNormalClicked = isCircleClicked(e.getX(), e.getY() - 30, NORMAL_X, NORMAL_Y, RADIUS);
+                boolean isHardClicked = isCircleClicked(e.getX(), e.getY() - 30, HARD_X, HARD_Y, RADIUS);
+                if (isEasyClicked) {
+                    gameMode = GameMode.EASY;
+                } else if (isNormalClicked) {
+                    gameMode = GameMode.NORMAL;
+                } else if (isHardClicked) {
+                    gameMode = GameMode.HARD;
+                }
+
+                if (isEasyClicked || isNormalClicked || isHardClicked) {
+                    gameState = GameState.PLAY;
+                    Board.init();
+                }
                 break;
             case PLAY:
                 Board.click(e.getX(), e.getY() - 30, this.getGraphics(), this);
