@@ -37,4 +37,12 @@ public class Constants {
 
         public static final int BOARD_MARGIN = 50;
         public static final int HAND_MARGIN = 20;
+
+        public static final int RADIUS = 90;
+        public static final int EASY_X = 300;
+        public static final int EASY_Y = 525;
+        public static final int NORMAL_X = 500;
+        public static final int NORMAL_Y = 525;
+        public static final int HARD_X = 700;
+        public static final int HARD_Y = 525;
 }

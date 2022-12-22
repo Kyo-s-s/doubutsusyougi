@@ -13,10 +13,12 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     Timer timer;
     Board board;
     public static GameState gameState;
+    public static GameMode gameMode;
     static Image titleImage = new ImageIcon("./src/images/titlepage.png").getImage();
 
     public GamePanel() {
         gameState = GameState.START;
+        gameMode = GameMode.EASY;
         timer = new Timer(50, this);
         timer.start();
     }
@@ -55,12 +57,30 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         repaint();
     }
 
+    boolean isCircleClicked(int x, int y, int cx, int cy, int r) {
+        return (x - cx) * (x - cx) + (y - cy) * (y - cy) < r * r;
+    }
+
     public void mouseClicked(MouseEvent e) {
         // 上のタイトルバーの分で-30
         switch (gameState) {
             case START:
-                gameState = GameState.PLAY;
-                Board.init();
+                // 当たり判定
+                boolean isEasyClicked = isCircleClicked(e.getX(), e.getY() - 30, EASY_X, EASY_Y, RADIUS);
+                boolean isNormalClicked = isCircleClicked(e.getX(), e.getY() - 30, NORMAL_X, NORMAL_Y, RADIUS);
+                boolean isHardClicked = isCircleClicked(e.getX(), e.getY() - 30, HARD_X, HARD_Y, RADIUS);
+                if (isEasyClicked) {
+                    gameMode = GameMode.EASY;
+                } else if (isNormalClicked) {
+                    gameMode = GameMode.NORMAL;
+                } else if (isHardClicked) {
+                    gameMode = GameMode.HARD;
+                }
+
+                if (isEasyClicked || isNormalClicked || isHardClicked) {
+                    gameState = GameState.PLAY;
+                    Board.init();
+                }
                 break;
             case PLAY:
                 Board.click(e.getX(), e.getY() - 30, this.getGraphics(), this);
