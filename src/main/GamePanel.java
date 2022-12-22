@@ -13,6 +13,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     Timer timer;
     Board board;
     public static GameState gameState;
+    static Image titleImage = new ImageIcon("./src/images/titlepage.png").getImage();
 
     public GamePanel() {
         gameState = GameState.START;
@@ -30,6 +31,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 g.setColor(Color.black);
                 g.setFont(new Font("Arial", Font.BOLD, 50));
                 g.drawString("Start", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2);
+
+                g.drawImage(titleImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 break;
             case PLAY:
                 Board.draw(g, this);
