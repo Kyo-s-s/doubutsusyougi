@@ -42,8 +42,6 @@ public class Board {
     }
 
     public static void draw(Graphics g, GamePanel observer) {
-        g.setColor(Color.white);
-        g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         ArrayList<Pos> movePos = new ArrayList<>();
         if (select.isChoicePos()) {
             int h = select.getChoicePos().getFirst();

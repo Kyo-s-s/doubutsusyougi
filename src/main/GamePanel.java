@@ -15,6 +15,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     public static GameState gameState;
     public static GameMode gameMode;
     static Image titleImage = new ImageIcon("./src/images/titlepage.png").getImage();
+    static Image resultImageWin = new ImageIcon("./src/images/result-win.png").getImage();
+    static Image resultImageLose = new ImageIcon("./src/images/result-lose.png").getImage();
+    static Image playImageEasy = new ImageIcon("./src/images/backeasy.png").getImage();
 
     public GamePanel() {
         gameState = GameState.START;
@@ -33,17 +36,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 g.drawImage(titleImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 break;
             case PLAY:
+                g.drawImage(playImageEasy, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 Board.draw(g, this);
                 break;
             case RESULT_WIN:
-                g.setColor(Color.black);
-                g.setFont(new Font("Arial", Font.BOLD, 50));
-                g.drawString("You Win!", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2);
+                g.drawImage(resultImageWin, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 break;
             case RESULT_LOSE:
-                g.setColor(Color.black);
-                g.setFont(new Font("Arial", Font.BOLD, 50));
-                g.drawString("You Lose!", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2);
+                g.drawImage(resultImageLose, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, this);
                 break;
         }
 
