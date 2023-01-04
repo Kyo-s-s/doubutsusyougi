@@ -324,6 +324,8 @@ public class Board implements Cloneable {
             return -1000000;
         }
         int score = 0;
+        score -= playerHand.size() * 200;
+        score += enemyHand.size() * 200;
         for (int h = 0; h < BOARD_CELL_HEIGHT; h++) {
             for (int w = 0; w < BOARD_CELL_WIDTH; w++) {
                 if (isPlayer(board[h][w])) {
