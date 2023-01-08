@@ -8,6 +8,8 @@ public enum PieceEnum {
     ELEPHANT_ENEMY,
     GIRAFFE_PLAYER,
     GIRAFFE_ENEMY,
+    DEER_PLAYER,
+    DEER_ENEMY,
     CHICK_PLAYER,
     CHICK_ENEMY,
     CHICKEN_PLAYER,

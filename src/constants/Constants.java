@@ -7,27 +7,42 @@ public class Constants {
         public static final int SCREEN_HEIGHT = 700;
         public static final int SCREEN_WIDTH = 1000;
 
-        public static final int BOARD_CELL_HEIGHT = 4;
-        public static final int BOARD_CELL_WIDTH = 3;
+        public static final int BOARD_CELL_HEIGHT = 5;
+        public static final int BOARD_CELL_WIDTH = 5;
         public static final PieceEnum[][] BOARD = {
                         {
                                         PieceEnum.GIRAFFE_ENEMY,
+                                        PieceEnum.ELEPHANT_ENEMY,
                                         PieceEnum.LION_ENEMY,
-                                        PieceEnum.ELEPHANT_ENEMY
+                                        PieceEnum.EMPTY,
+                                        PieceEnum.DEER_ENEMY
                         },
                         {
                                         PieceEnum.EMPTY,
                                         PieceEnum.CHICK_ENEMY,
+                                        PieceEnum.CHICK_ENEMY,
+                                        PieceEnum.CHICK_ENEMY,
+                                        PieceEnum.EMPTY
+                        },
+                        {
                                         PieceEnum.EMPTY,
+                                        PieceEnum.EMPTY,
+                                        PieceEnum.EMPTY,
+                                        PieceEnum.EMPTY,
+                                        PieceEnum.EMPTY
                         },
                         {
                                         PieceEnum.EMPTY,
                                         PieceEnum.CHICK_PLAYER,
+                                        PieceEnum.CHICK_PLAYER,
+                                        PieceEnum.CHICK_PLAYER,
                                         PieceEnum.EMPTY,
                         },
                         {
-                                        PieceEnum.ELEPHANT_PLAYER,
+                                        PieceEnum.DEER_PLAYER,
+                                        PieceEnum.EMPTY,
                                         PieceEnum.LION_PLAYER,
+                                        PieceEnum.ELEPHANT_PLAYER,
                                         PieceEnum.GIRAFFE_PLAYER
                         }
         };

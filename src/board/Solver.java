@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.PriorityQueue;
 
-import data_structure.Pair;
+import main.GameMode;
+import main.GamePanel;
 
 public class Solver {
-
     static final int SEARCH_DEPTH = 5;
     static final double TIME_LIMIT = 0.5;
 
     Board current;
+    GameMode gameMode;
 
     class State {
         Board next;
@@ -27,6 +28,22 @@ public class Solver {
 
     public Solver(Board board) {
         this.current = board;
+        gameMode = GamePanel.gameMode;
+    }
+
+    double rand() {
+        switch (gameMode) {
+            case EASY -> {
+                return Math.random() * 0.5;
+            }
+            case NORMAL -> {
+                return Math.random() * 0.75;
+            }
+            case HARD -> {
+                return 1.0;
+            }
+        }
+        return 1.0;
     }
 
     public Optional<Board> solve() {
@@ -41,7 +58,10 @@ public class Solver {
             queues[i] = new PriorityQueue<>((a, b) -> b.score - a.score);
         }
         for (Board next : neighborhood) {
-            queues[0].add(new State(next.clone(), next.clone(), next.score()));
+            if (next.isWin(false)) {
+                return Optional.of(next);
+            }
+            queues[0].add(new State(next.clone(), next.clone(), (int) (rand() * next.score())));
         }
 
         long startTime = System.nanoTime();
@@ -51,12 +71,20 @@ public class Solver {
                     continue;
                 }
                 State state = queues[i].poll();
+                if (state.predict.isWin(true)) {
+                    continue;
+                }
+                if (state.predict.isWin(false)) {
+                    queues[i + 1].add(state);
+                    continue;
+                }
                 Board predict = null;
                 int score = 0;
                 for (Board nextPlayerTurn : state.predict.getNeighborhood(true)) {
-                    if (predict == null || nextPlayerTurn.score() < score) {
+                    int nextScore = (int) (rand() * nextPlayerTurn.score());
+                    if (predict == null || nextScore < score) {
                         predict = nextPlayerTurn;
-                        score = nextPlayerTurn.score();
+                        score = nextScore;
                     }
                 }
                 if (predict == null) {
@@ -64,14 +92,16 @@ public class Solver {
                 }
 
                 for (Board nextEnemyBoard : predict.getNeighborhood(false)) {
-                    queues[i + 1].add(new State(state.next, nextEnemyBoard, score));
+                    queues[i + 1].add(new State(state.next, nextEnemyBoard, (int) (rand() * nextEnemyBoard.score())));
                 }
             }
         }
         if (queues[SEARCH_DEPTH - 1].isEmpty()) {
             return Optional.empty();
         }
-        System.out.println(queues[SEARCH_DEPTH - 1].peek().score);
+        if (queues[SEARCH_DEPTH - 1].isEmpty()) {
+            return Optional.empty();
+        }
         return Optional.of(queues[SEARCH_DEPTH - 1].poll().next);
     }
 

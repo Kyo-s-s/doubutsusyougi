@@ -6,8 +6,7 @@ import javax.swing.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
-
-import javax.security.auth.kerberos.KerberosCredMessage;
+import java.util.Random;
 
 import main.GamePanel;
 import main.GameState;
@@ -104,7 +103,7 @@ public class Board implements Cloneable {
             int handCount = currentBoard.enemyHand.get(i).getSecond();
             int x = left - HAND_CELL_SIZE - BOARD_MARGIN;
             int y = top + i * (HAND_CELL_SIZE + HAND_MARGIN);
-            drawHand(g, x, y, handPiece, false, observer);
+            drawHand(g, x, y, handPiece, handCount, false, observer);
         }
 
         for (int i = 0; i < currentBoard.playerHand.size(); i++) {
@@ -112,7 +111,7 @@ public class Board implements Cloneable {
             int handCount = currentBoard.playerHand.get(i).getSecond();
             int x = right + BOARD_MARGIN;
             int y = bottom - HAND_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN);
-            drawHand(g, x, y, handPiece, select.getChoiceHand() == i, observer);
+            drawHand(g, x, y, handPiece, handCount, select.getChoiceHand() == i, observer);
         }
     }
 
@@ -149,13 +148,11 @@ public class Board implements Cloneable {
                     currentBoard.movePiece(pos.getFirst(), pos.getSecond(), nextH, nextW);
                     select.reset();
                     if (currentBoard.isWin(true)) {
-                        System.out.println("You Win!");
                         GamePanel.gameState = GameState.RESULT_WIN;
                         return;
                     }
                     currentBoard.enemyTurn(g, observer);
                     if (currentBoard.isWin(false)) {
-                        System.out.println("You Lose...");
                         GamePanel.gameState = GameState.RESULT_LOSE;
                     }
                     return;
@@ -249,7 +246,11 @@ public class Board implements Cloneable {
 
         Solver solver = new Solver(this);
         Optional<Board> nextBoard = solver.solve();
-        nextBoard.ifPresent(next -> {
+        nextBoard.ifPresentOrElse(next -> {
+            currentBoard = next;
+        }, () -> {
+            ArrayList<Board> neighborhood = this.getNeighborhood(false);
+            Board next = neighborhood.get(new Random().nextInt(neighborhood.size()));
             currentBoard = next;
         });
     }
@@ -318,9 +319,7 @@ public class Board implements Cloneable {
     }
 
     public int score() {
-        if (isWin(false)) {
-            return 1000000;
-        } else if (isWin(true)) {
+        if (isWin(true)) {
             return -1000000;
         }
         int score = 0;

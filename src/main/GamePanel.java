@@ -13,7 +13,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     Timer timer;
     Board board;
     public static GameState gameState;
-    public static GameMode gameMode;
+    public static GameMode gameMode = GameMode.EASY;
     static Image titleImage = new ImageIcon("./src/images/titlepage.png").getImage();
     static Image resultImageWin = new ImageIcon("./src/images/result-win.png").getImage();
     static Image resultImageLose = new ImageIcon("./src/images/result-lose.png").getImage();
