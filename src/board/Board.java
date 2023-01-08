@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 
-import javax.security.auth.kerberos.KerberosCredMessage;
-
 import main.GamePanel;
 import main.GameState;
 import constants.PieceEnum;
@@ -150,13 +148,11 @@ public class Board implements Cloneable {
                     currentBoard.movePiece(pos.getFirst(), pos.getSecond(), nextH, nextW);
                     select.reset();
                     if (currentBoard.isWin(true)) {
-                        System.out.println("You Win!");
                         GamePanel.gameState = GameState.RESULT_WIN;
                         return;
                     }
                     currentBoard.enemyTurn(g, observer);
                     if (currentBoard.isWin(false)) {
-                        System.out.println("You Lose...");
                         GamePanel.gameState = GameState.RESULT_LOSE;
                     }
                     return;
