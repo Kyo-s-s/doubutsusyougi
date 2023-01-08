@@ -103,7 +103,7 @@ public class Board implements Cloneable {
             int handCount = currentBoard.enemyHand.get(i).getSecond();
             int x = left - HAND_CELL_SIZE - BOARD_MARGIN;
             int y = top + i * (HAND_CELL_SIZE + HAND_MARGIN);
-            drawHand(g, x, y, handPiece, false, observer);
+            drawHand(g, x, y, handPiece, handCount, false, observer);
         }
 
         for (int i = 0; i < currentBoard.playerHand.size(); i++) {
@@ -111,7 +111,7 @@ public class Board implements Cloneable {
             int handCount = currentBoard.playerHand.get(i).getSecond();
             int x = right + BOARD_MARGIN;
             int y = bottom - HAND_CELL_SIZE - i * (HAND_CELL_SIZE + HAND_MARGIN);
-            drawHand(g, x, y, handPiece, select.getChoiceHand() == i, observer);
+            drawHand(g, x, y, handPiece, handCount, select.getChoiceHand() == i, observer);
         }
     }
 

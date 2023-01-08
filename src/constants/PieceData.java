@@ -216,11 +216,13 @@ public class PieceData {
         }
     }
 
-    public static void drawHand(Graphics g, int x, int y, PieceEnum type, boolean isSelect, GamePanel observer) {
-        // TODO: 個数を表示する
+    public static void drawHand(Graphics g, int x, int y, PieceEnum type, int cnt, boolean isSelect,
+            GamePanel observer) {
 
         getPieceImage(type).ifPresent(image -> {
             g.drawImage(image, x, y, HAND_CELL_SIZE, HAND_CELL_SIZE, observer);
+            g.setFont(new Font("Arial", Font.PLAIN, 18));
+            g.drawString("" + cnt, x + 5, y + 20);
             if (isSelect) {
                 g.drawImage(flameGreen, x, y, HAND_CELL_SIZE, HAND_CELL_SIZE, observer);
             }
