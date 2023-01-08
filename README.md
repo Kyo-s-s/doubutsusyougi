@@ -25,7 +25,7 @@
 1つ目のPrioritQueueに $neighborhood(g)$ をすべて挿入します(以降， $i$ 番目のPriorityQueueを $\text{PriorityQueue}[i]$ と表します)．その後，以下を設定した時間いっぱい繰り返します．今回は0.5秒としました．
 - for $i$ in $1, \ldots, n - 1$
     - $state \gets \text{PriorityQueue}[i].pop()$ (ここで， $state$ は`Enemy`が指し終わった直後の盤面です)
-    - $next \gets \min neighborhood(state)$ (`Player`はスコアが最小になるように動きます． $next$ は`Player`が指し終わった直後の盤面です)
+    - $next \gets neighborhood(state)の要素の中で，最もscoreが低いもの$ (`Player`はスコアが最小になるように動きます． $next$ は`Player`が指し終わった直後の盤面です)
     - $\text{PriorityQueue}[i + 1]$ に $neighborhood(next)$ をすべて挿入します
     
 これが終了したら， $\text{PriorityQueue}[n].pop()$ の盤面となるために必要な最初の一手を次の手として決定します．
