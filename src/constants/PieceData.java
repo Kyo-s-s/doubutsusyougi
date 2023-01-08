@@ -23,6 +23,8 @@ public class PieceData {
     public static Image elephantEnemy = new ImageIcon("./src/images/elephant-reverse.png").getImage();
     public static Image giraffePlayer = new ImageIcon("./src/images/giraffe.png").getImage();
     public static Image giraffeEnemy = new ImageIcon("./src/images/giraffe-reverse.png").getImage();
+    public static Image deerPlayer = new ImageIcon("./src/images/deer.png").getImage();
+    public static Image deerEnemy = new ImageIcon("./src/images/deer-reverse.png").getImage();
     public static Image chickenPlayer = new ImageIcon("./src/images/chicken.png").getImage();
     public static Image chickenEnemy = new ImageIcon("./src/images/chicken-reverse.png").getImage();
     public static Image chickPlayer = new ImageIcon("./src/images/chick.png").getImage();
@@ -46,6 +48,10 @@ public class PieceData {
                 return Optional.of(giraffePlayer);
             case GIRAFFE_ENEMY:
                 return Optional.of(giraffeEnemy);
+            case DEER_PLAYER:
+                return Optional.of(deerPlayer);
+            case DEER_ENEMY:
+                return Optional.of(deerEnemy);
             case CHICK_PLAYER:
                 return Optional.of(chickPlayer);
             case CHICK_ENEMY:
@@ -87,6 +93,16 @@ public class PieceData {
                 moves.add(new Pos(0, 1));
                 moves.add(new Pos(0, -1));
                 break;
+            case DEER_PLAYER:
+                moves.add(new Pos(-1, 0));
+                moves.add(new Pos(1, 1));
+                moves.add(new Pos(1, -1));
+                break;
+            case DEER_ENEMY:
+                moves.add(new Pos(1, 0));
+                moves.add(new Pos(-1, -1));
+                moves.add(new Pos(-1, 1));
+                break;
             case CHICK_PLAYER:
                 moves.add(new Pos(-1, 0));
                 break;
@@ -127,6 +143,10 @@ public class PieceData {
                 return PieceEnum.GIRAFFE_ENEMY;
             case GIRAFFE_ENEMY:
                 return PieceEnum.GIRAFFE_PLAYER;
+            case DEER_PLAYER:
+                return PieceEnum.DEER_ENEMY;
+            case DEER_ENEMY:
+                return PieceEnum.DEER_PLAYER;
             case CHICK_PLAYER:
                 return PieceEnum.CHICK_ENEMY;
             case CHICK_ENEMY:
@@ -151,7 +171,7 @@ public class PieceData {
 
     public static boolean isPlayer(PieceEnum type) {
         switch (type) {
-            case LION_PLAYER, ELEPHANT_PLAYER, GIRAFFE_PLAYER, CHICK_PLAYER, CHICKEN_PLAYER:
+            case LION_PLAYER, ELEPHANT_PLAYER, GIRAFFE_PLAYER, DEER_PLAYER, CHICK_PLAYER, CHICKEN_PLAYER:
                 return true;
             default:
                 return false;
@@ -160,7 +180,7 @@ public class PieceData {
 
     public static boolean isEnemy(PieceEnum type) {
         switch (type) {
-            case LION_ENEMY, ELEPHANT_ENEMY, GIRAFFE_ENEMY, CHICK_ENEMY, CHICKEN_ENEMY:
+            case LION_ENEMY, ELEPHANT_ENEMY, GIRAFFE_ENEMY, DEER_ENEMY, CHICK_ENEMY, CHICKEN_ENEMY:
                 return true;
             default:
                 return false;

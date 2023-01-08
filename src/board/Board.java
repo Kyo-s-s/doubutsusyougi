@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
 import javax.security.auth.kerberos.KerberosCredMessage;
 
@@ -249,7 +250,11 @@ public class Board implements Cloneable {
 
         Solver solver = new Solver(this);
         Optional<Board> nextBoard = solver.solve();
-        nextBoard.ifPresent(next -> {
+        nextBoard.ifPresentOrElse(next -> {
+            currentBoard = next;
+        }, () -> {
+            ArrayList<Board> neighborhood = this.getNeighborhood(false);
+            Board next = neighborhood.get(new Random().nextInt(neighborhood.size()));
             currentBoard = next;
         });
     }
@@ -318,9 +323,7 @@ public class Board implements Cloneable {
     }
 
     public int score() {
-        if (isWin(false)) {
-            return 1000000;
-        } else if (isWin(true)) {
+        if (isWin(true)) {
             return -1000000;
         }
         int score = 0;
